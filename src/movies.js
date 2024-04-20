@@ -2047,16 +2047,60 @@ function dramaMoviesScore(moviesArray) {
   ).toFixed(2);
 }
 
-console.log(dramaMoviesScore(movies));
+// console.log(dramaMoviesScore(movies));
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
-function orderByYear(moviesArray) {}
+function orderByYear(moviesArray) {
+  return [...moviesArray].sort((movieA, movieB) => {
+    if (movieA.year === movieB.year) {
+      return movieA.title.localeCompare(movieB.title);
+    }
+    return movieA.year - movieB.year;
+  });
+}
+
+// console.log(orderByYear(movies));
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
-function orderAlphabetically(moviesArray) {}
+function orderAlphabetically(moviesArray) {
+  return [...moviesArray]
+    .sort((movieA, movieB) => movieA.title.localeCompare(movieB.title))
+    .slice(0, 20);
+}
+
+// console.log(orderAlphabetically(movies));
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
+function turnHoursToMinutes(moviesArray) {
+  const regexpSize = /([0-9]+)h\s?([0-9]*)(?:min)?/;
+  return [...moviesArray].map((movie) => {
+    let match = movie.duration.match(regexpSize);
+    movie.duration = parseInt(match[1]) * 60 + parseInt(match[2] || 0);
+    return movie;
+  });
+}
+
+// console.log(turnHoursToMinutes(movies));
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+  allMoviesYears = moviesArray
+    .map((movie) => movie.year)
+    .filter((item, pos, self) => self.indexOf(item) === pos);
+  let maxYearAvgScore = 0;
+  let maxYear = 0;
+  for (year of allMoviesYears) {
+    currentYearScores = moviesArray.filter((movie) => movie.year === year);
+    currentYearAvgScore =
+      (currentYearScores.reduce(
+        (totalScore, movie) => totalScore + movie.score
+      , 0) / currentYearScores.length).toFixed(2);
+    if (currentYearAvgScore > maxYearAvgScore){
+      maxYearAvgScore = currentYearAvgScore;
+      maxYear = year;
+    }
+  }
+  return `The best year was ${maxYear} with an average score of ${maxYearAvgScore}`;
+}
+
+console.log(bestYearAvg(movies));
