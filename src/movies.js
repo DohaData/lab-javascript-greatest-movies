@@ -1,4 +1,4 @@
-const movies = [
+const moviesList = [
   {
     title: "The Shawshank Redemption",
     year: 1994,
@@ -2029,22 +2029,35 @@ function howManyMovies(moviesArray) {
 
 // Iteration 3: All scores average - Get the average of all scores with 2 decimals
 function scoresAverage(moviesArray) {
-  return (
-    moviesArray.reduce((sumScores, movie) => sumScores + movie.score, 0) /
-    moviesArray.length
-  ).toFixed(2);
+  if (!moviesArray.length) {
+    return 0;
+  }
+  return parseFloat(
+    (
+      moviesArray.reduce(
+        (sumScores, movie) => sumScores + (movie.score || 0),
+        0
+      ) / moviesArray.length
+    ).toFixed(2)
+  );
 }
 
-// console.log(scoresAverage(movies));
+// console.log(typeof scoresAverage(moviesList));
 
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(moviesArray) {
-  return (
-    moviesArray
-      .filter((movie) => movie.genre.includes("Drama"))
-      .reduce((sumScores, movie) => sumScores + movie.score, 0) /
-    moviesArray.length
-  ).toFixed(2);
+  dramaMovies = moviesArray.filter((movie) => movie.genre.includes("Drama"));
+  if (!dramaMovies.length){
+    return 0
+  }
+  return parseFloat(
+    (
+      dramaMovies.reduce(
+        (sumScores, movie, self) => sumScores + movie.score,
+        0
+      ) / dramaMovies.length
+    ).toFixed(2)
+  );
 }
 
 // console.log(dramaMoviesScore(movies));
@@ -2063,8 +2076,8 @@ function orderByYear(moviesArray) {
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
 function orderAlphabetically(moviesArray) {
-  return [...moviesArray]
-    .sort((movieA, movieB) => movieA.title.localeCompare(movieB.title))
+  return moviesArray.map(movie => movie.title)
+    .sort((titleA, titleB) => titleA.localeCompare(titleB))
     .slice(0, 20);
 }
 
@@ -2073,7 +2086,7 @@ function orderAlphabetically(moviesArray) {
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
 function turnHoursToMinutes(moviesArray) {
   const regexpSize = /([0-9]+)h\s?([0-9]*)(?:min)?/;
-  return [...moviesArray].map((movie) => {
+  return structuredClone(moviesArray).map((movie) => {
     let match = movie.duration.match(regexpSize);
     movie.duration = parseInt(match[1]) * 60 + parseInt(match[2] || 0);
     return movie;
@@ -2084,6 +2097,9 @@ function turnHoursToMinutes(moviesArray) {
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
 function bestYearAvg(moviesArray) {
+  if (!moviesArray.length){
+    return null;
+  }
   allMoviesYears = moviesArray
     .map((movie) => movie.year)
     .filter((item, pos, self) => self.indexOf(item) === pos);
@@ -2091,16 +2107,23 @@ function bestYearAvg(moviesArray) {
   let maxYear = 0;
   for (year of allMoviesYears) {
     currentYearScores = moviesArray.filter((movie) => movie.year === year);
-    currentYearAvgScore =
-      (currentYearScores.reduce(
-        (totalScore, movie) => totalScore + movie.score
-      , 0) / currentYearScores.length).toFixed(2);
-    if (currentYearAvgScore > maxYearAvgScore){
+    currentYearAvgScore = parseFloat(
+      (
+        currentYearScores.reduce(
+          (totalScore, movie) => totalScore + movie.score,
+          0
+        ) / currentYearScores.length
+      ).toFixed(2)
+    );
+    if (currentYearAvgScore > maxYearAvgScore) {
       maxYearAvgScore = currentYearAvgScore;
+      maxYear = year;
+    }
+    else if(currentYearAvgScore === maxYearAvgScore && maxYear > year) {
       maxYear = year;
     }
   }
   return `The best year was ${maxYear} with an average score of ${maxYearAvgScore}`;
 }
 
-console.log(bestYearAvg(movies));
+// console.log(bestYearAvg(movies));
