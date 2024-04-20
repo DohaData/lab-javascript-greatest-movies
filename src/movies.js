@@ -4,7 +4,7 @@
 function getAllDirectors(moviesArray) {
   let newMoviesArray = moviesArray.map((movie) => movie.director);
   return newMoviesArray.filter(
-    (item, pos) => newMoviesArray.indexOf(item) === pos
+    (item, pos, self) => self.indexOf(item) === pos
   );
 }
 
