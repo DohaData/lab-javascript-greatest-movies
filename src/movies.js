@@ -2032,7 +2032,7 @@ function scoresAverage(moviesArray) {
   if (!moviesArray.length) {
     return 0;
   }
-  return parseFloat(
+  return Number(
     (
       moviesArray.reduce(
         (sumScores, movie) => sumScores + (movie.score || 0),
@@ -2047,17 +2047,7 @@ function scoresAverage(moviesArray) {
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(moviesArray) {
   dramaMovies = moviesArray.filter((movie) => movie.genre.includes("Drama"));
-  if (!dramaMovies.length){
-    return 0
-  }
-  return parseFloat(
-    (
-      dramaMovies.reduce(
-        (sumScores, movie, self) => sumScores + movie.score,
-        0
-      ) / dramaMovies.length
-    ).toFixed(2)
-  );
+  return dramaMovies.length ? scoresAverage(dramaMovies) : 0;
 }
 
 // console.log(dramaMoviesScore(movies));
@@ -2107,7 +2097,7 @@ function bestYearAvg(moviesArray) {
   let maxYear = 0;
   for (year of allMoviesYears) {
     currentYearScores = moviesArray.filter((movie) => movie.year === year);
-    currentYearAvgScore = parseFloat(
+    currentYearAvgScore = Number(
       (
         currentYearScores.reduce(
           (totalScore, movie) => totalScore + movie.score,
